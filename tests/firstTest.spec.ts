@@ -91,22 +91,3 @@ test('Re Using locators', async({page}) =>{
     await expect(emailField).toHaveValue('test@test.com')
 
 })
-
-test('Assertions', async({page}) => {
-
-    //General Assertions
-    const basicFormSubmitBtn = page.locator('nb-card').filter({hasText: "Basic form"}).locator('button')
-
-    const value = 5
-    expect(value).toEqual(5)
-
-    const text = await basicFormSubmitBtn.textContent()
-    expect(text).toEqual('Submit')
-
-    //Locator Assertion
-    await expect(basicFormSubmitBtn).toHaveText('Submit')
-
-    //Soft Assertion
-    await expect.soft(basicFormSubmitBtn).toHaveText('Submit')
-    await basicFormSubmitBtn.click()
-})

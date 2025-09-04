@@ -3,7 +3,7 @@ import { PageManager } from '../page-objects/pageManager'
 import {faker} from '@faker-js/faker'
 
 test.beforeEach(async({page}) => {
-    await page.goto('http://localhost:4200')
+    await page.goto('/')
     
 })
 
@@ -23,6 +23,8 @@ test ('parametrized methods', async ({page}) =>{
 
     await pm.navigateTo().formLayoutsPage()
     await pm.onFormLayoutPage().submitUsingTheGridFormWithCredentialsAndSelectOption('test@test.com', 'Welcome1', "Option 2")
+    await page.screenshot({path: 'screenshots/parametrizedGridForm.png'})
+    await page.locator('nb-card', {hasText: "Inline form"}).screenshot({path: 'screenshots/parametrizedGridFormLocator.png'})
     await pm.onFormLayoutPage().submitInlineFormWithNameEmailAndCheckedBox(randomFullName, randomEmail, true)
     // await pm.navigateTo().datePickerPage()
     // await pm.onDatePickerPage().selectCommonDatePickerDateFromToday(10)

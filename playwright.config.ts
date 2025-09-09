@@ -9,7 +9,7 @@ require('dotenv').config();
  */
 export default defineConfig<TestOptions>({
     //change default timeout
-    globalTimeout: 60000,
+    //globalTimeout: 60000,
     timeout: 20000,
 
     //locator timeout

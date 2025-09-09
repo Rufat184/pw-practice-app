@@ -9,7 +9,7 @@ require('dotenv').config();
  */
 export default defineConfig<TestOptions>({
     //change default timeout
-    //globalTimeout: 30000,
+    globalTimeout: 60000,
     timeout: 20000,
 
     //locator timeout
@@ -58,6 +58,7 @@ export default defineConfig<TestOptions>({
     webServer: {
         command: 'npm run start',
         url: 'http://localhost:4200',
+        timeout: 120 * 1000,
         reuseExistingServer: true
     }
 

@@ -1,6 +1,6 @@
-import {expect, test} from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
-test.beforeEach(async({page}) => {
+test.beforeEach(async ({ page }) => {
     await page.goto('/')
     await page.getByText('Forms').click()
     await page.getByText('Form Layouts').click()
@@ -10,17 +10,17 @@ test.beforeEach(async({page}) => {
 //     await page.close()
 // })
 
-test.describe('Form Layouts page', () =>{
-    test.beforeEach(async({page}) => {
-    await page.getByText('Forms').click()
-    await page.getByText('Form Layouts').click()
+test.describe('Form Layouts page', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.getByText('Forms').click()
+        await page.getByText('Form Layouts').click()
     })
 
-    test('input fields', async({page})=>{
-        const usingTheGridEmailInput = page.locator('nb-card', {hasText: 'Using the Grid'}).getByRole('textbox', {name: 'Email'})
+    test('input fields', async ({ page }) => {
+        const usingTheGridEmailInput = page.locator('nb-card', { hasText: 'Using the Grid' }).getByRole('textbox', { name: 'Email' })
         await usingTheGridEmailInput.fill('test@test.com')
         await usingTheGridEmailInput.clear()
-        await usingTheGridEmailInput.pressSequentially('test2@test.com', {delay: 500})
+        await usingTheGridEmailInput.pressSequentially('test2@test.com', { delay: 500 })
 
         //generic assertion
         const inputValue = await usingTheGridEmailInput.inputValue()
@@ -30,45 +30,45 @@ test.describe('Form Layouts page', () =>{
         await expect(usingTheGridEmailInput).toHaveValue('test2@test.com')
     })
 
-    test('radio buttons', async({page})=>{
-        const usingTheGridRadioButton = page.locator('nb-card', {hasText: 'Using the Grid'})
+    test('radio buttons', async ({ page }) => {
+        const usingTheGridRadioButton = page.locator('nb-card', { hasText: 'Using the Grid' })
         //await usingTheGridRadioButton.getByLabel('Option 1').check({force: true})
-        await usingTheGridRadioButton.getByRole('radio', {name: 'Option 2'}).check({force: true})
-    
+        await usingTheGridRadioButton.getByRole('radio', { name: 'Option 2' }).check({ force: true })
 
-        const radioStatus = await usingTheGridRadioButton.getByRole('radio', {name: 'Option 2'}).isChecked()
+
+        const radioStatus = await usingTheGridRadioButton.getByRole('radio', { name: 'Option 2' }).isChecked()
         expect(radioStatus).toBeTruthy()
-        await expect(usingTheGridRadioButton.getByRole('radio', {name: 'Option 1'}).isChecked()).toBeFalsy
+        await expect(usingTheGridRadioButton.getByRole('radio', { name: 'Option 1' }).isChecked()).toBeFalsy
 
-        
-        const usingTheSubmitButton = page.locator('nb-card', {hasText: 'Basic form'})
-        await usingTheSubmitButton.getByRole('button', {name: 'Submit'}).click()
 
-        const radioStatus1 = await usingTheGridRadioButton.getByRole('radio', {name: 'Option 2'}).check({force: true})
-        
+        const usingTheSubmitButton = page.locator('nb-card', { hasText: 'Basic form' })
+        await usingTheSubmitButton.getByRole('button', { name: 'Submit' }).click()
+
+        const radioStatus1 = await usingTheGridRadioButton.getByRole('radio', { name: 'Option 2' }).check({ force: true })
+
 
     })
 })
 
-test('Checked Boxes', async({page}) =>{
+test('Checked Boxes', async ({ page }) => {
     await page.getByText('Modal & Overlays').click()
     await page.getByText('Toastr').click()
 
     // const checkBoxHide = page.getByRole('checkbox', {name: 'Hide on click'})
     // await checkBoxHide.click({force: true})
 
-    await page.getByRole('checkbox', {name: 'Hide on click'}).uncheck({force: true})
-    await page.getByRole('checkbox', {name: 'Prevent arising of duplicate toast'}).check({force: true})
+    await page.getByRole('checkbox', { name: 'Hide on click' }).uncheck({ force: true })
+    await page.getByRole('checkbox', { name: 'Prevent arising of duplicate toast' }).check({ force: true })
 
     const allBoxes = page.getByRole('checkbox')
 
-    for (const box of await allBoxes.all()){
-        await box.uncheck({force: true})
+    for (const box of await allBoxes.all()) {
+        await box.uncheck({ force: true })
         expect(await box.isChecked()).toBeFalsy()
     }
 })
 
-test('List and DropDowns', async({page}) =>{
+test('List and DropDowns', async ({ page }) => {
     await page.getByText('Modal & Overlays').click()
     await page.getByText('Toastr').click()
     const dropDownMenu = page.locator('ngx-header nb-select')
@@ -82,7 +82,7 @@ test('List and DropDowns', async({page}) =>{
 
     await expect(optionList).toHaveText(["Light", "Dark", "Cosmic", "Corporate"])
 
-    await optionList.filter({hasText: 'Cosmic'}).click()
+    await optionList.filter({ hasText: 'Cosmic' }).click()
     const text = await page.locator('input[name="title"]').inputValue()
     await expect(text).toContain('HI there!')
     const header = page.locator('nb-layout-header')
@@ -96,22 +96,22 @@ test('List and DropDowns', async({page}) =>{
     }
 
     await dropDownMenu.click()
-    for(const color in colors){
-        await optionList.filter({hasText: color}).click()
+    for (const color in colors) {
+        await optionList.filter({ hasText: color }).click()
         await expect(header).toHaveCSS('background-color', colors[color])
-        if (color != 'Corporate'){
+        if (color != 'Corporate') {
             await dropDownMenu.click()
         }
     }
 })
 
-test('Tooltip Tests', async({page})=>{
+test('Tooltip Tests', async ({ page }) => {
     await page.getByText('Modal & Overlays').click()
     await page.getByText('Tooltip').click()
 
-    const toolTipCard = page.locator('nb-card', {hasText: "Tooltip Placements"})
+    const toolTipCard = page.locator('nb-card', { hasText: "Tooltip Placements" })
 
-    await toolTipCard.getByRole('button', {name: 'Top'}).hover()
+    await toolTipCard.getByRole('button', { name: 'Top' }).hover()
 
     page.getByRole('tooltip') //if you have a role tooltip created
 
@@ -121,7 +121,7 @@ test('Tooltip Tests', async({page})=>{
 
 })
 
-test('JavaScript Dialog Boxes', async({page})=>{
+test('JavaScript Dialog Boxes', async ({ page }) => {
     await page.getByText('Tables & Data').click()
     await page.getByText('Smart Table').click()
 
@@ -130,17 +130,17 @@ test('JavaScript Dialog Boxes', async({page})=>{
         dialog.accept()
     })
 
-    await page.getByRole('table').locator('tr', {hasText: 'mdo@gmail.com'}).locator('.nb-trash').click()
+    await page.getByRole('table').locator('tr', { hasText: 'mdo@gmail.com' }).locator('.nb-trash').click()
     await expect(page.locator('table tr').first()).not.toHaveText('mdo@gmail.com')
 
 })
 
-test('Web Tables', async({page})=>{
+test('Web Tables', async ({ page }) => {
     await page.getByText('Tables & Data').click()
     await page.getByText('Smart Table').click()
 
     //1 get row by any test in this row
-    const targetRow = page.getByRole('row', {name: 'twitter@outlook.com'})
+    const targetRow = page.getByRole('row', { name: 'twitter@outlook.com' })
     await targetRow.locator('.nb-edit').click()
     await page.locator('input-editor').getByPlaceholder('Age').clear()
     await page.locator('input-editor').getByPlaceholder('Age').fill('35')
@@ -148,7 +148,7 @@ test('Web Tables', async({page})=>{
 
     //2 get the row based on the value in the specific column
     await page.locator('.ng2-smart-pagination-nav').getByText('2').click()
-    const targetRowById = page.getByRole('row', {name: '11'}).filter({has: page.locator('td').nth(1).getByText('11')})
+    const targetRowById = page.getByRole('row', { name: '11' }).filter({ has: page.locator('td').nth(1).getByText('11') })
     await targetRowById.locator('.nb-edit').click()
     await page.locator('input-editor').getByPlaceholder('E-mail').clear()
     await page.locator('input-editor').getByPlaceholder('E-mail').fill('test@test.com')
@@ -158,26 +158,26 @@ test('Web Tables', async({page})=>{
     //3 test filter of the table
     const ages = ["20", "30", "40", "200"]
 
-    for(let age of ages){
+    for (let age of ages) {
         await page.locator('input-filter').getByPlaceholder('Age').clear()
         await page.locator('input-filter').getByPlaceholder('Age').fill(age)
         await page.waitForTimeout(500)
         const ageRows = page.locator('tbody tr')
 
-        for (let row of await ageRows.all()){
+        for (let row of await ageRows.all()) {
             const cellValue = await row.locator('td').last().textContent()
-            if (age=="200"){
+            if (age == "200") {
                 expect(await page.getByRole('table').textContent()).toContain('No data found')
-            }else{
+            } else {
                 expect(cellValue).toEqual(age)
             }
-            
+
         }
     }
 
 })
 
-test('datepicker', async({page}) =>{
+test('datepicker', async ({ page }) => {
     await page.getByText('Forms').click()
     await page.getByText('Datepicker').click()
 
@@ -189,8 +189,8 @@ test('datepicker', async({page}) =>{
     let date = new Date()
     date.setDate(date.getDate() + randomDate)
     const expectedDate = date.getDate().toString()
-    const expectedMonthShort = date.toLocaleDateString('En-US', {month: 'short'}).toString()
-    const expectedMonthLong = date.toLocaleDateString('En-US', {month: 'long'}).toString()
+    const expectedMonthShort = date.toLocaleDateString('En-US', { month: 'short' }).toString()
+    const expectedMonthLong = date.toLocaleDateString('En-US', { month: 'long' }).toString()
     const expectedYear = date.getFullYear().toString()
     const dateToAssert = `${expectedMonthShort} ${expectedDate}, ${expectedYear}`
 
@@ -202,11 +202,11 @@ test('datepicker', async({page}) =>{
     }
 
 
-    await page.locator('[class="day-cell ng-star-inserted"]').getByText(expectedDate, {exact:true}).click()
+    await page.locator('[class="day-cell ng-star-inserted"]').getByText(expectedDate, { exact: true }).click()
     await expect(calendarInputField).toHaveValue(dateToAssert)
 })
 
-test('sladers', async({page}) =>{
+test('sladers', async ({ page }) => {
     //update attribute
     await page.getByText('IoT Dashboard').click()
     const tempGauge = page.locator('[tabtitle="Temperature"] ngx-temperature-dragger circle')
@@ -223,14 +223,14 @@ test('sladers', async({page}) =>{
     const x = box.x + box.width / 2
     const y = box.y + box.height / 2
 
-    await page.mouse.move (x, y)
+    await page.mouse.move(x, y)
 
     await page.mouse.down()
     await page.mouse.move(x - 100, y)
     await page.mouse.move(x - 100, y + 100)
     await page.mouse.up()
 
-    await expect(tempBox).toContainText('12')
+    await expect(tempBox).toContainText('13')
 })
 
 

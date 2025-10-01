@@ -56,7 +56,7 @@ export default defineConfig<TestOptions>({
     ],
 
     webServer: {
-        command: 'npm run start',
+        command: 'npx ng serve',
         url: 'http://localhost:4200',
         timeout: 120 * 1000,
         reuseExistingServer: true

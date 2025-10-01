@@ -86,6 +86,6 @@
     "stylelint": "^15.6.0",
     "ts-node": "^10.9.2",
     "tslint-language-service": "^0.9.9",
-    "typescript": "5.2"
+    "typescript": "^5.9.3"
   }
 }

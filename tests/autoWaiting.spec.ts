@@ -1,8 +1,16 @@
 import {expect, test} from '@playwright/test'
-import { timeout } from 'rxjs-compat/operator/timeout'
+
+declare const process: {
+    env: Record<string, string | undefined>
+}
 
 test.beforeEach(async({page}, testInfo) => {
-    await page.goto(process.env.URL)
+    const url = process.env.URL
+    if (!url) {
+        throw new Error('URL environment variable is not defined.')
+    }
+
+    await page.goto(url)
     await page.getByText('Button Triggering AJAX Request').click()
     testInfo.setTimeout(testInfo.timeout + 2000)
 })

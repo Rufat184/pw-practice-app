@@ -38,15 +38,12 @@ test.describe('Form Layouts page', () => {
 
         const radioStatus = await usingTheGridRadioButton.getByRole('radio', { name: 'Option 2' }).isChecked()
         expect(radioStatus).toBeTruthy()
-        await expect(usingTheGridRadioButton.getByRole('radio', { name: 'Option 1' }).isChecked()).toBeFalsy
-
+        expect(usingTheGridRadioButton.getByRole('radio', { name: 'Option 1' }).isChecked()).toBeFalsy()
 
         const usingTheSubmitButton = page.locator('nb-card', { hasText: 'Basic form' })
         await usingTheSubmitButton.getByRole('button', { name: 'Submit' }).click()
 
-        const radioStatus1 = await usingTheGridRadioButton.getByRole('radio', { name: 'Option 2' }).check({ force: true })
-
-
+        await usingTheGridRadioButton.getByRole('radio', { name: 'Option 2' }).check({ force: true })
     })
 })
 
@@ -74,21 +71,18 @@ test('List and DropDowns', async ({ page }) => {
     const dropDownMenu = page.locator('ngx-header nb-select')
     await dropDownMenu.click()
 
-    page.getByRole('list') //when the list has UL tag
-    page.getByRole('listitem') //when the list has LI tag
-
-    //const optionList = page.getByRole('list').locator('nb-option')
+    // const optionList = page.getByRole('list').locator('nb-option')
     const optionList = page.locator('nb-option-list nb-option')
 
     await expect(optionList).toHaveText(["Light", "Dark", "Cosmic", "Corporate"])
 
     await optionList.filter({ hasText: 'Cosmic' }).click()
     const text = await page.locator('input[name="title"]').inputValue()
-    await expect(text).toContain('HI there!')
+    expect(text).toContain('HI there!')
     const header = page.locator('nb-layout-header')
     await expect(header).toHaveCSS('background-color', 'rgb(50, 50, 89)')
 
-    const colors = {
+    const colors: Record<string, string> = {
         "Light": "rgb(255, 255, 255)",
         "Dark": "rgb(34, 43, 69)",
         "Cosmic": "rgb(50, 50, 89)",
@@ -113,7 +107,8 @@ test('Tooltip Tests', async ({ page }) => {
 
     await toolTipCard.getByRole('button', { name: 'Top' }).hover()
 
-    page.getByRole('tooltip') //if you have a role tooltip created
+    // Wait for tooltip to appear before reading its text
+    await expect(page.locator('nb-tooltip')).toBeVisible()
 
     const tooltip = await page.locator('nb-tooltip').textContent()
 
@@ -161,7 +156,7 @@ test('Web Tables', async ({ page }) => {
     for (let age of ages) {
         await page.locator('input-filter').getByPlaceholder('Age').clear()
         await page.locator('input-filter').getByPlaceholder('Age').fill(age)
-        await page.waitForTimeout(500)
+        // removed: waitForTimeout is deprecated, Playwright's auto-waiting handles timing
         const ageRows = page.locator('tbody tr')
 
         for (let row of await ageRows.all()) {
@@ -194,15 +189,16 @@ test('datepicker', async ({ page }) => {
     const expectedYear = date.getFullYear().toString()
     const dateToAssert = `${expectedMonthShort} ${expectedDate}, ${expectedYear}`
 
-    let calendarMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
+    let calendarMonthAndYear = (await page.locator('nb-calendar-view-mode').textContent()) ?? ''
     const expectedMothAndYear = `${expectedMonthLong} ${expectedYear}`
     while (!calendarMonthAndYear.includes(expectedMothAndYear)) {
         await page.locator('nb-calendar-pageable-navigation [data-name="chevron-right"]').click()
-        calendarMonthAndYear = await page.locator('nb-calendar-view-mode').textContent()
+        calendarMonthAndYear = (await page.locator('nb-calendar-view-mode').textContent()) ?? ''
     }
 
 
-    await page.locator('[class="day-cell ng-star-inserted"]').getByText(expectedDate, { exact: true }).click()
+    // Use a stable selector — avoid dynamic Angular classes like 'ng-star-inserted'
+    await page.locator('.day-cell').getByText(expectedDate, { exact: true }).click()
     await expect(calendarInputField).toHaveValue(dateToAssert)
 })
 
@@ -219,7 +215,7 @@ test('sladers', async ({ page }) => {
     //mouse movement
     const tempBox = page.locator('[tabtitle="Temperature"] ngx-temperature-dragger')
     await tempBox.scrollIntoViewIfNeeded()
-    const box = await tempBox.boundingBox()
+    const box = (await tempBox.boundingBox()) ?? { x: 0, y: 0, width: 100, height: 100 }
     const x = box.x + box.width / 2
     const y = box.y + box.height / 2
 

@@ -1,8 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
+import 'dotenv/config';
 import type { TestOptions } from './test-options';
-
-
-require('dotenv').config();
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -24,7 +22,9 @@ export default defineConfig<TestOptions>({
         baseURL: 'http://localhost:4200',
         globalQAUrl: 'https://www.globalsqa.com/demo-site/draganddrop/',
         trace: 'on-first-retry',
-        navigationTimeout: 5000,
+        // NOTE: `navigationTimeout` is not a real Playwright option (removed years ago), so it was a no-op.
+        // Navigation is bounded by the global `timeout` above. To cap navigation only, override the
+        // `page` fixture instead: `page: async ({ page }, use) => { page.setDefaultNavigationTimeout(5000); await use(page); }`.
         video: {
             mode: 'off',
             size: { width: 1920, height: 1080 }

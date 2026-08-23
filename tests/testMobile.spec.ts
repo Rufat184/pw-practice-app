@@ -1,5 +1,5 @@
 import { base } from '@faker-js/faker/.';
-import { expect, test } from '@playwright/test'
+import { expect, test } from '@playwright/test';
 
 test('input fields', async ({ page }, testInfo) => {
 
